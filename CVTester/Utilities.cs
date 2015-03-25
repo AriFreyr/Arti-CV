@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Net;
 using System.IO;
-using System.Drawing;
+using System.Net;
+using Image = System.Drawing.Image;
 
 namespace CVTester
 {
     public class Utilities
     {
-        public static System.Drawing.Image GetImageFromUrl(string url)
+        public static Image GetImageFromUrl(string url)
         {
             var httpWebRequest = (HttpWebRequest) WebRequest.Create(url);
 
@@ -21,15 +21,22 @@ namespace CVTester
                         {
                             throw new ArgumentNullException(url);
                         }
-                        return System.Drawing.Image.FromStream(stream);
+                        return Image.FromStream(stream);
                     }
                 }
             }
-            catch (Exception e)
+            catch (WebException e)
             {
                 Console.WriteLine("Exception in GetImageFromUrl: " + e.Message);
             }
             return null;
+        }
+
+        public static byte[] ImageToByteArray(Image img)
+        {
+            var ms = new MemoryStream();
+            img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            return ms.ToArray();
         }
 
     }

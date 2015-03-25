@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using CVTester.DAL;
 using Newtonsoft.Json;
+using CVTester.Models;
+using Image = System.Drawing.Image;
 
 namespace CVTester
 {
@@ -15,29 +16,45 @@ namespace CVTester
         const string SearchEngineCx = "015363661733912743555:c60m6j8qy2o";
         static void Main(string[] args)
         {
-            try
-            {
-                var imageTypes = new[] {"car", "laptop", "phone"};
-                var requestUrl = CreateRequest(imageTypes[0]);
-                var response = MakeRequest(requestUrl);
+            var imageTypes = new[] {"car", "laptop", "phone"};
+            var db = new ImageContext();
+            var count = 1;
 
+            while (db.Image.Count() < 150)
+            {
+                var requestUrl = CreateRequest(imageTypes[2], count);
+                var response = MakeRequest(requestUrl);
+                count = response.queries.nextPage[0].count;
                 foreach (var item in response.items)
                 {
-                    Console.WriteLine(item.link);
+                    try
+                    {
+                        var img = Utilities.GetImageFromUrl(item.link);
+
+                        if (img != null)
+                        {
+                            db.Image.Add(new ImageData
+                            {
+                                Image = Utilities.ImageToByteArray(img),
+                                Link = item.link,
+                                Type = "phone"
+                            });
+                            db.SaveChanges();
+                        }
+                    }
+                    catch (WebException e)
+                    {
+                        Console.WriteLine("Could not reach: " + item.link + " " + e.Message);
+                    }
                 }
-                Console.Read();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
             }
         }
 
-        public static string CreateRequest(string query)
+        public static string CreateRequest(string query, int count)
         {
             var reqeustString = "https://www.googleapis.com/customsearch/v1?key="
                                 + GoogleApiKey + "&cx=" + SearchEngineCx + "&q=" + query
-                                + "&searchType=image";
+                                + "&searchType=image" + "&start=" + count+ "&imgSize=medium";
 
             return reqeustString;
         }
