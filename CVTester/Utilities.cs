@@ -15,7 +15,7 @@ namespace CVTester
             {
                 using (var httpWebResponse = (HttpWebResponse) httpWebRequest.GetResponse())
                 {
-                    using (var stream = httpWebResponse.GetResponseStream())
+                    using (Stream stream = httpWebResponse.GetResponseStream())
                     {
                         if (stream == null)
                         {
@@ -25,7 +25,7 @@ namespace CVTester
                     }
                 }
             }
-            catch (WebException e)
+            catch (Exception e)
             {
                 Console.WriteLine("Exception in GetImageFromUrl: " + e.Message);
             }
@@ -37,6 +37,36 @@ namespace CVTester
             var ms = new MemoryStream();
             img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             return ms.ToArray();
+        }
+
+        public static string GetClassFromInt(int c)
+        {
+            switch (c)
+            {
+                case 0:
+                    return "car";
+                case 1:
+                    return "laptop";
+                case 2:
+                    return "bicycle";
+                default:
+                    return null;
+            }
+        }
+
+        public static int GetIntFromClass(string c)
+        {
+            switch (c)
+            {
+                case "car":
+                    return 0;
+                case "laptop":
+                    return 1;
+                case "bicycle":
+                    return 2;
+                default:
+                    return 100000;
+            }
         }
 
     }
