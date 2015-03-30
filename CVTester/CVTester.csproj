@@ -93,8 +93,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAL\ImageContext.cs" />
+    <Compile Include="DecisionTree.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ImageProcessor.cs" />
+    <Compile Include="KNN.cs" />
     <Compile Include="KnnTester.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ImageData.cs" />
@@ -147,6 +149,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\IMG_0114.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\macbookari.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

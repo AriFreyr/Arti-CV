@@ -63,9 +63,29 @@ namespace CVTester.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap bike {
+            get {
+                object obj = ResourceManager.GetObject("bike", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ivarphone {
             get {
                 object obj = ResourceManager.GetObject("ivarphone", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap macbookari {
+            get {
+                object obj = ResourceManager.GetObject("macbookari", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
