@@ -23,7 +23,7 @@ namespace CVTester
             var db = new ImageContext();
             var data = db.Image.ToList();
             data.Shuffle();
-            //PopulateDatabase("macbook pro", db, "laptop");
+            //PopulateDatabase("phoenix bicycle", db, "bicycle");
             var imageProcessor = new ImageProcessor(new FastCornersDetector());
             double[][] inputs;
             int[] outputs;
@@ -33,17 +33,17 @@ namespace CVTester
             sw.Stop();
             Console.WriteLine("Processing for: " + sw.ElapsedMilliseconds + "ms with: " + numImages + " images");
 
-            var sw1 = Stopwatch.StartNew();
-            //var knn = UseKNN(inputs, outputs);
-            var svm = new SVM();
-            svm.TrainSVM(new ChiSquare(), 3, inputs, outputs);
+            TestSVM(inputs, outputs);
+            /*var sw1 = Stopwatch.StartNew();
+            //var svm = new SVM();
+            //svm.TrainSVM(new RationalQuadratic(1), 3, inputs, outputs);
             sw1.Stop();
             Console.WriteLine("Training for: " + sw1.ElapsedMilliseconds);
 
             var sw2 = Stopwatch.StartNew();
-            var result = svm.Classify(imageProcessor.ProcessImages(Properties.Resources.macbookari));
+            var result = knn.Classify(imageProcessor.ProcessImages(Properties.Resources.macbookivar));
             sw2.Stop();
-            Console.WriteLine("Classifying for " + sw2.ElapsedMilliseconds + "ms, classified as: " + result); 
+            Console.WriteLine("Classifying for " + sw2.ElapsedMilliseconds + "ms, classified as: " + result); */
 
             Console.Read(); 
 
@@ -59,12 +59,14 @@ namespace CVTester
         /// <param name="type">type of item</param>
         public static void PopulateDatabase(string searchQuery, ImageContext ctx, string type)
         {
+            var beginCount = ctx.Image.Count(x => x.Type == type);
             var count = 1;
-            while (ctx.Image.Count(x => x.Type == type) < 50)
+            while ((ctx.Image.Count(x => x.Type == type) - beginCount) < 20)
             {
                 var requestUrl = CreateRequest(searchQuery, count);
                 var response = MakeRequest(requestUrl);
-                count = response.queries.nextPage[0].count;
+                count += response.queries.nextPage[0].count;
+                Console.WriteLine(count);
                 foreach (var item in response.items)
                 {
                     try
@@ -135,7 +137,7 @@ namespace CVTester
             }
         }
 
-        public static void UseSVM(double[][] inputs, int[] outputs)
+        public static void TestSVM(double[][] inputs, int[] outputs)
         {
           
             var crossValidation = new CrossValidation(inputs.Length, 10);
@@ -151,7 +153,9 @@ namespace CVTester
 
                 var sw1 = Stopwatch.StartNew();
                 var svm = new SVM();
-                var trainingError = svm.TrainSVM(new ChiSquare(), 3, trainingInputs, trainingOutputs);
+                // 3-sigma rule
+                var sigma = 0.3333*(((double) inputs[0].Length/2) - 1) + 0.8;
+                var trainingError = svm.TrainSVM(new Gaussian(sigma), 3, trainingInputs, trainingOutputs);
                 sw1.Stop(); 
                 Console.WriteLine("Training for: " + sw1.ElapsedMilliseconds + "ms with errors: " + trainingError);
 
@@ -173,12 +177,39 @@ namespace CVTester
            
         }
 
-        public static KNN UseKNN(double[][] inputs, int[] outputs)
+        public static void TestKNN(double[][] inputs, int[] outputs, int kValue)
         {
-            var knn = new KNN();
-            knn.TrainKNN(inputs, outputs, 4);
+            var crossValidation = new CrossValidation(inputs[0].Length, 10);
+            crossValidation.Fitting = delegate(int k, int[] indicesTrain, int[] indicesValidation)
+            {
+                var trainingInputs = inputs.Submatrix(indicesTrain);
+                var trainingOutputs = outputs.Submatrix(indicesTrain);
 
-            return knn;
+                // And now the validation data:
+                var validationInputs = inputs.Submatrix(indicesValidation);
+                var validationOutputs = outputs.Submatrix(indicesValidation);
+
+                var sw = Stopwatch.StartNew();
+                var knn = new KNN();
+                knn.TrainKNN(trainingInputs, trainingOutputs, kValue);
+                sw.Stop();
+
+                Console.WriteLine("Training for: " + sw.ElapsedMilliseconds + "ms");
+
+                var error = knn.ComputeError(validationInputs, validationOutputs);
+
+                return new CrossValidationValues(knn, 0, error);
+
+            };
+
+            // Compute the cross-validation
+            var result = crossValidation.Compute();
+
+            // Finally, access the measured performance.
+            var trainingErrors = result.Training.Mean;
+            var validationErrors = result.Validation.Mean;
+
+            Console.WriteLine("Finished with " + trainingErrors + " training errors and " + validationErrors + " validation errors");
         }
     }
 }
