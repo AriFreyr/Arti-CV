@@ -13,6 +13,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ImageClassifier.ImageProcessors;
+using Image = System.Drawing.Image;
 
 namespace ImageClassifier
 {
@@ -39,11 +41,11 @@ namespace ImageClassifier
             var db = new ImageContext();
             var data = db.Image.ToList();
             data.Shuffle();
-            imageProcessor = new ImageProcessor(new FastCornersDetector(), new LoadingForm());
+            imageProcessor = new CornerProcessor(new FastCornersDetector());
             var sw = Stopwatch.StartNew();
             var numImages = imageProcessor.ProcessImages(data, out argInputs, out argOutputs);
             sw.Stop();
-            LoadingForm.ActiveForm.Close();
+            //LoadingForm.ActiveForm.Close();
         }
 
         private void comboBoxAlgPicker_SelectedIndexChanged(object sender, EventArgs e)
@@ -92,9 +94,8 @@ namespace ImageClassifier
                 {
                     var svm = new SVM();
                     string result;
-                    var sigma = 0.3333 * (((double)inputs[0].Length / 2) - 1) + 0.8;
                     textBoxResults.AppendText("Running training function..." + Environment.NewLine);
-                    svm.TrainSVM(new Gaussian(sigma), 3, inputs, outputs);
+                    svm.TrainSVM(new RationalQuadratic(1), 3, inputs, outputs);
                     result = svm.Classify(imageProcessor.ProcessImages(img));
                     textBoxResults.AppendText("Result: " + result + Environment.NewLine);
                 }

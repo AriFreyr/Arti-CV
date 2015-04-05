@@ -84,12 +84,8 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImageProcessor.cs" />
-    <Compile Include="Images.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Images.resx</DependentUpon>
-    </Compile>
+    <Compile Include="ImageProcessors\CornerProcessor.cs" />
+    <Compile Include="ImageProcessors\ImageProcessor.cs" />
     <Compile Include="KNN.cs" />
     <Compile Include="LoadingForm.cs">
       <SubType>Form</SubType>
@@ -109,7 +105,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Images.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Images.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="LoadingForm.resx">
       <DependentUpon>LoadingForm.cs</DependentUpon>
@@ -136,7 +131,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CVTester\CVTester.csproj">
@@ -145,12 +142,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\opel.jpg" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Resources\testimage.jpg" />
     <None Include="Resources\bike.jpg" />
     <None Include="Resources\macbook.png" />
-    <Content Include="Resources\swift.jpg" />
+    <None Include="Resources\opeltrashvan.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
