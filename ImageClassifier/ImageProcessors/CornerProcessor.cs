@@ -1,29 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Accord.Imaging;
 using AForge.Imaging;
-using CVTester.Models;
+using ImageClassifier.Models;
 using System.Drawing;
 using System.IO;
 using Image = System.Drawing.Image;
 
-namespace CVTester
+namespace ImageClassifier.ImageProcessors
 {
-    public class ImageProcessor
+    public class CornerProcessor : ImageProcessor
     {
         private const int NumberOfWords = 32;
-        private ICornersDetector _detector;
+
+        private readonly ICornersDetector _detector;
         private BagOfVisualWords<CornerFeaturePoint> _bagOfVisualWords;
 
-        public ImageProcessor(ICornersDetector detector)
+        public CornerProcessor(ICornersDetector detector)
         {
             _detector = detector;
         }
 
-        public int ProcessImages(List<ImageData> images, out double[][] inputs, out int[] outputs)
+        public override int ProcessImages(List<ImageData> images, out double[][] inputs, out int[] outputs)
         {
             outputs = new int[images.Count];
             inputs = new double[images.Count][];
@@ -53,7 +51,7 @@ namespace CVTester
             return images.Count;
         }
 
-        public Double[] ProcessImages(Image ctx)
+        public override Double[] ProcessImages(Image ctx)
         {
             return _bagOfVisualWords.GetFeatureVector(new Bitmap(ctx));
         }

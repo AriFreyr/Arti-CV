@@ -93,11 +93,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAL\ImageContext.cs" />
-    <Compile Include="DecisionTree.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="ImageProcessor.cs" />
+    <Compile Include="ImageProcessors\CornerProcessor.cs" />
+    <Compile Include="ImageProcessors\ImageProcessor.cs" />
     <Compile Include="KNN.cs" />
-    <Compile Include="KnnTester.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ImageData.cs" />
     <Compile Include="Program.cs" />

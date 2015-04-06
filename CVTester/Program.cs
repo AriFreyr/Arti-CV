@@ -8,6 +8,7 @@ using Accord.MachineLearning;
 using Accord.Math;
 using Accord.Statistics.Kernels;
 using CVTester.DAL;
+using CVTester.ImageProcessors;
 using Newtonsoft.Json;
 using CVTester.Models;
 
@@ -24,7 +25,7 @@ namespace CVTester
             var data = db.Image.ToList();
             data.Shuffle();
             //PopulateDatabase("phoenix bicycle", db, "bicycle");
-            var imageProcessor = new ImageProcessor(new FastCornersDetector());
+            var imageProcessor = new CornerProcessor(new FastCornersDetector());
             double[][] inputs;
             int[] outputs;
 
@@ -33,15 +34,19 @@ namespace CVTester
             sw.Stop();
             Console.WriteLine("Processing for: " + sw.ElapsedMilliseconds + "ms with: " + numImages + " images");
 
-            TestSVM(inputs, outputs);
+            for (var i = 1; i <= 30; i++)
+            {
+                TestKNN(inputs, outputs, i);
+            }
+
             /*var sw1 = Stopwatch.StartNew();
-            //var svm = new SVM();
-            //svm.TrainSVM(new RationalQuadratic(1), 3, inputs, outputs);
+            var svm = new SVM();
+            svm.TrainSVM(new RationalQuadratic(1), 3, inputs, outputs);
             sw1.Stop();
             Console.WriteLine("Training for: " + sw1.ElapsedMilliseconds);
 
             var sw2 = Stopwatch.StartNew();
-            var result = knn.Classify(imageProcessor.ProcessImages(Properties.Resources.macbookivar));
+            var result = svm.Classify(imageProcessor.ProcessImages(Properties.Resources.bike));
             sw2.Stop();
             Console.WriteLine("Classifying for " + sw2.ElapsedMilliseconds + "ms, classified as: " + result); */
 
@@ -153,9 +158,7 @@ namespace CVTester
 
                 var sw1 = Stopwatch.StartNew();
                 var svm = new SVM();
-                // 3-sigma rule
-                var sigma = 0.3333*(((double) inputs[0].Length/2) - 1) + 0.8;
-                var trainingError = svm.TrainSVM(new Gaussian(sigma), 3, trainingInputs, trainingOutputs);
+                var trainingError = svm.TrainSVM(new RationalQuadratic(1), 3, trainingInputs, trainingOutputs);
                 sw1.Stop(); 
                 Console.WriteLine("Training for: " + sw1.ElapsedMilliseconds + "ms with errors: " + trainingError);
 
@@ -194,7 +197,7 @@ namespace CVTester
                 knn.TrainKNN(trainingInputs, trainingOutputs, kValue);
                 sw.Stop();
 
-                Console.WriteLine("Training for: " + sw.ElapsedMilliseconds + "ms");
+                //Console.WriteLine("Training for: " + sw.ElapsedMilliseconds + "ms");
 
                 var error = knn.ComputeError(validationInputs, validationOutputs);
 
