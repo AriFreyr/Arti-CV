@@ -17,13 +17,25 @@ using ImageClassifier.ImageProcessors;
 using Image = System.Drawing.Image;
 using Accord.MachineLearning;
 using Accord.Math;
+using AForge.Imaging;
+using ImageClassifier.Models;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace ImageClassifier
 {
     public partial class Form1 : Form
     {
-        private enum Algorithms {KNN=1, SVM=2};
+
+        const string GoogleApiKey = "AIzaSyC3E6KWp9rLiIt3mVG4CsABiZcafO7456A";
+        const string SearchEngineCx = "015363661733912743555:c60m6j8qy2o";
+        private enum Algorithms { KNN = 1, SVM = 2 };
+        private enum CornerDetector { FAST = 1, SURF = 2, HCD = 3 };
+        private enum imageTypes { car = 1, laptop = 2, bicycle = 3 };
+
         private Algorithms selectedAlgorithm;
+        private CornerDetector selectedCornerDetector;
+        private imageTypes selectedCategory;
         private double[][] inputs;
         private int[] outputs;
         private ImageProcessor imageProcessor;
@@ -48,20 +60,137 @@ namespace ImageClassifier
         #region Utility functions
         private void ProcessImages(out double[][] argInputs, out int[] argOutputs)
         {
-            var imageTypes = new[] { "car", "laptop", "bicycle" };
             db = new ImageContext();
             var data = db.Image.ToList();
             data.Shuffle();
-            imageProcessor = new CornerProcessor(new FastCornersDetector());
+            imageProcessor = new CornerProcessor(getCornerDetector());
             var sw = Stopwatch.StartNew();
             var numImages = imageProcessor.ProcessImages(data, out argInputs, out argOutputs);
             sw.Stop();
+            tabControl1.Enabled = true;
             Console.WriteLine();
             //LoadingForm.ActiveForm.Close();
         }
 
+        /// <summary>
+        /// Populates the database with a given search term with 50 entries
+        /// </summary>
+        /// <param name="searchQuery">search term</param>
+        /// <param name="ctx">database context</param>
+        /// <param name="type">type of item</param>
+        public void PopulateDatabase(string searchQuery, ImageContext ctx, string type, int numberOfImages)
+        {
+            var beginCount = ctx.Image.Count(x => x.Type == type);
+            var count = 1;
+            var imagesLeft = 0;
+            LoadingForm lf = new LoadingForm();
+            lf.StartProgressBar("Downloading images", numberOfImages+11);
+            lf.Show();
+            lf.Refresh();
+            while (imagesLeft < numberOfImages)
+            {
+                var requestUrl = CreateRequest(searchQuery, count);
+                var response = MakeRequest(requestUrl);
+                count += response.queries.nextPage[0].count;
+                Console.WriteLine(count);
+                foreach (var item in response.items)
+                {
+                    try
+                    {
+                        var img = Utilities.GetImageFromUrl(item.link);
+
+                        if (img != null)
+                        {
+                            ctx.Image.Add(new ImageData
+                            {
+                                Image = Utilities.ImageToByteArray(img),
+                                Link = item.link,
+                                Type = type
+                            });
+                            ctx.SaveChanges();
+                        }
+                    }
+                    catch (WebException e)
+                    {
+                        Console.WriteLine("Could not reach: " + item.link + " " + e.Message);
+                    }
+                }
+                imagesLeft = (ctx.Image.Count(x => x.Type == type) - beginCount);
+                lf.SetProgressBar(imagesLeft);
+                lf.Refresh();
+            }
+            lf.Close();
+            getAllImagesFromDatabaseToListView(listView1);
+        }
+
+        /// <summary>
+        /// Creates a request string to google API with search term and page number
+        /// </summary>
+        /// <param name="query">search term</param>
+        /// <param name="count">page index</param>
+        /// <returns></returns>
+        public static string CreateRequest(string query, int count)
+        {
+            var requestString = "https://www.googleapis.com/customsearch/v1?key="
+                                + GoogleApiKey + "&cx=" + SearchEngineCx + "&q=" + query
+                                + "&searchType=image" + "&start=" + count + "&imgSize=medium";
+
+            return requestString;
+        }
+
+        /// <summary>
+        /// Makes request to google API with given request string
+        /// </summary>
+        /// <param name="requestUrl"></param>
+        /// <returns></returns>
+        public static Response MakeRequest(string requestUrl)
+        {
+            var request = (HttpWebRequest)WebRequest.Create(requestUrl);
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new Exception(String.Format(
+                                            "Server error (HTTP {0}: {1}).",
+                                            response.StatusCode,
+                                            response.StatusDescription));
+                }
+                var serializer = new JsonSerializer();
+
+                Response result;
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    result = (Response)serializer.Deserialize(reader, typeof(Response));
+                }
+
+                return result;
+
+            }
+        }
+
+
+        private ICornersDetector getCornerDetector()
+        {
+            if (selectedCornerDetector.Equals(CornerDetector.FAST))
+            {
+                return new FastCornersDetector();
+            }
+            else if (selectedCornerDetector.Equals(CornerDetector.SURF))
+            {
+                return new SpeededUpRobustFeaturesDetector();
+            }
+            else if (selectedCornerDetector.Equals(CornerDetector.HCD))
+            {
+                return new HarrisCornersDetector();
+            }
+
+            throw new Exception();
+        }
+
         private void getAllImagesFromDatabaseToListView(ListView listview)
         {
+            listView1.Clear();
+            imageData = convertImagesFromDatabaseToBitmapType(db);
             imageList1.ImageSize = new Size(64, 64);
             listview.View = View.LargeIcon;
 
@@ -299,10 +428,6 @@ namespace ImageClassifier
             {
                 getAllImagesFromDatabaseToListView(listView1);
             }
-            if (tabControl1.SelectedIndex.Equals(1))
-            {
-                getAllImagesFromDatabaseToListView(listView2);
-            }
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -364,6 +489,49 @@ namespace ImageClassifier
         private void numericUpDownPolyConst_ValueChanged(object sender, EventArgs e)
         {
             PolyConst = (double)numericUpDownPolyConst.Value;
+        }
+
+        private void comboBoxCornerDetector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxCornerDetector.SelectedIndex.Equals(0))
+            {
+                selectedCornerDetector = CornerDetector.FAST;
+            }
+            else if (comboBoxCornerDetector.SelectedIndex.Equals(1))
+            {
+                selectedCornerDetector = CornerDetector.SURF;
+            }
+            else if (comboBoxCornerDetector.SelectedIndex.Equals(2))
+            {
+                selectedCornerDetector = CornerDetector.HCD;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string searchQuery = textBox1.Text;
+            PopulateDatabase(searchQuery, db, selectedCategory.ToString(), (int)numericUpDownNumberOfImages.Value);
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex.Equals(0))
+            {
+                selectedCategory = imageTypes.car;
+            }
+            else if (comboBox1.SelectedIndex.Equals(1))
+            {
+                selectedCategory = imageTypes.laptop;
+            }
+            else if (comboBox1.SelectedIndex.Equals(2))
+            {
+                selectedCategory = imageTypes.bicycle;
+            }
+        }
+
+        private void lastImageButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

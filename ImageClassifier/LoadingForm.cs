@@ -28,6 +28,11 @@ namespace ImageClassifier
             progressBar1.Increment(1);
         }
 
+        public void SetProgressBar(int progress)
+        {
+            progressBar1.Increment(progress);
+        }
+
         public void StopProgressBar()
         {
             progressBar1.Value = 0;
