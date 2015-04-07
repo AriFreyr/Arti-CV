@@ -34,6 +34,10 @@ namespace ImageClassifier
         private List<Bitmap> imageData;
         private int KNNCVFolds = 10;
         private int SVMCVFolds = 10;
+        private double RatQuadConst = 1.0000;
+        private double GaussSigma = 1.0000;
+        private int PolyDegree = 1;
+        private double PolyConst = 1.0000;
 
         public Form1()
         {
@@ -118,7 +122,7 @@ namespace ImageClassifier
                 knn.TrainKNN(trainingInputs, trainingOutputs, kValue);
                 sw.Stop();
 
-                addToTestResultBox("Training for: " + sw.ElapsedMilliseconds + "ms");
+                //addToTestResultBox("Training for: " + sw.ElapsedMilliseconds + "ms");
 
                 var error = knn.ComputeError(validationInputs, validationOutputs);
 
@@ -152,7 +156,7 @@ namespace ImageClassifier
 
                 var sw1 = Stopwatch.StartNew();
                 var svm = new SVM();
-                var trainingError = svm.TrainSVM(new RationalQuadratic(1), 3, trainingInputs, trainingOutputs);
+                var trainingError = svm.TrainSVM(getKernel(), 3, trainingInputs, trainingOutputs);
                 sw1.Stop();
 
                 //textBoxTestResults.AppendText("Training for: " + sw1.ElapsedMilliseconds + "ms with errors: " + trainingError + Environment.NewLine);
@@ -172,6 +176,29 @@ namespace ImageClassifier
             var validationErrors = result.Validation.Mean;
 
             addToTestResultBox("Finished with " + trainingErrors + " training errors and " + validationErrors + " validation errors");
+        }
+
+        private IKernel getKernel()
+        {
+            if (radioButtonRatQuad.Checked)
+            {
+                return new RationalQuadratic(RatQuadConst);
+            }
+            else if (radioButtonPoly.Checked)
+            {
+                return new Polynomial(PolyDegree, PolyConst);
+            }
+            else if (radioButtonGauss.Checked)
+            {
+                return new Gaussian(GaussSigma);
+            }
+            else if (radioButtonChi.Checked)
+            {
+                return new ChiSquare();
+            }
+
+            throw new Exception();
+
         }
 
         private void addToTestResultBox(string result)
@@ -317,6 +344,26 @@ namespace ImageClassifier
         private void numericUpDownCVFoldsKNN_ValueChanged(object sender, EventArgs e)
         {
             KNNCVFolds = (int)numericUpDownCVFoldsKNN.Value;
+        }
+
+        private void numericUpDownRatQuadConst_ValueChanged(object sender, EventArgs e)
+        {
+            RatQuadConst = (double)numericUpDownRatQuadConst.Value;
+        }
+
+        private void numericUpDownGaussSigma_ValueChanged(object sender, EventArgs e)
+        {
+            GaussSigma = (double)numericUpDownGaussSigma.Value;
+        }
+
+        private void numericUpDownPolyDegree_ValueChanged(object sender, EventArgs e)
+        {
+            PolyDegree = (int)numericUpDownPolyDegree.Value;
+        }
+
+        private void numericUpDownPolyConst_ValueChanged(object sender, EventArgs e)
+        {
+            PolyConst = (double)numericUpDownPolyConst.Value;
         }
     }
 }

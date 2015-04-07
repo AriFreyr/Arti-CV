@@ -33,11 +33,11 @@
             this.comboBoxAlgPicker = new System.Windows.Forms.ComboBox();
             this.labelClassifyingAlg = new System.Windows.Forms.Label();
             this.groupBoxClassifier = new System.Windows.Forms.GroupBox();
-            this.buttonBagOfWords = new System.Windows.Forms.Button();
             this.numericUpDownKValue = new System.Windows.Forms.NumericUpDown();
             this.buttonTrain = new System.Windows.Forms.Button();
             this.labelKValue = new System.Windows.Forms.Label();
             this.buttonClassify = new System.Windows.Forms.Button();
+            this.buttonBagOfWords = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonOpen = new System.Windows.Forms.Button();
             this.textBoxImageInput = new System.Windows.Forms.TextBox();
@@ -48,7 +48,20 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.listView2 = new System.Windows.Forms.ListView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.numericUpDownRatQuadConst = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.numericUpDownGaussSigma = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numericUpDownPolyConst = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.numericUpDownPolyDegree = new System.Windows.Forms.NumericUpDown();
+            this.radioButtonPoly = new System.Windows.Forms.RadioButton();
+            this.radioButtonChi = new System.Windows.Forms.RadioButton();
+            this.radioButtonGauss = new System.Windows.Forms.RadioButton();
+            this.radioButtonRatQuad = new System.Windows.Forms.RadioButton();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.buttonRunTestSVM = new System.Windows.Forms.Button();
@@ -66,7 +79,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.listView2 = new System.Windows.Forms.ListView();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBoxClassifier.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownKValue)).BeginInit();
             this.groupBoxImage.SuspendLayout();
@@ -76,6 +89,10 @@
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRatQuadConst)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGaussSigma)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPolyConst)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPolyDegree)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCVFoldsKNN)).BeginInit();
@@ -83,6 +100,7 @@
             this.tabPage3.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // comboBoxAlgPicker
@@ -112,7 +130,6 @@
             // 
             this.groupBoxClassifier.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBoxClassifier.Controls.Add(this.buttonBagOfWords);
             this.groupBoxClassifier.Controls.Add(this.numericUpDownKValue);
             this.groupBoxClassifier.Controls.Add(this.buttonTrain);
             this.groupBoxClassifier.Controls.Add(this.labelKValue);
@@ -121,20 +138,10 @@
             this.groupBoxClassifier.Controls.Add(this.comboBoxAlgPicker);
             this.groupBoxClassifier.Location = new System.Drawing.Point(6, 6);
             this.groupBoxClassifier.Name = "groupBoxClassifier";
-            this.groupBoxClassifier.Size = new System.Drawing.Size(307, 505);
+            this.groupBoxClassifier.Size = new System.Drawing.Size(307, 446);
             this.groupBoxClassifier.TabIndex = 2;
             this.groupBoxClassifier.TabStop = false;
             this.groupBoxClassifier.Text = "Classifier";
-            // 
-            // buttonBagOfWords
-            // 
-            this.buttonBagOfWords.Location = new System.Drawing.Point(9, 418);
-            this.buttonBagOfWords.Name = "buttonBagOfWords";
-            this.buttonBagOfWords.Size = new System.Drawing.Size(283, 23);
-            this.buttonBagOfWords.TabIndex = 8;
-            this.buttonBagOfWords.Text = "Compute Bag of Words";
-            this.buttonBagOfWords.UseVisualStyleBackColor = true;
-            this.buttonBagOfWords.Click += new System.EventHandler(this.buttonBagOfWords_Click);
             // 
             // numericUpDownKValue
             // 
@@ -160,7 +167,7 @@
             // 
             this.buttonTrain.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.buttonTrain.Enabled = false;
-            this.buttonTrain.Location = new System.Drawing.Point(9, 447);
+            this.buttonTrain.Location = new System.Drawing.Point(9, 388);
             this.buttonTrain.Name = "buttonTrain";
             this.buttonTrain.Size = new System.Drawing.Size(283, 23);
             this.buttonTrain.TabIndex = 5;
@@ -180,13 +187,23 @@
             // 
             this.buttonClassify.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.buttonClassify.Enabled = false;
-            this.buttonClassify.Location = new System.Drawing.Point(9, 476);
+            this.buttonClassify.Location = new System.Drawing.Point(9, 417);
             this.buttonClassify.Name = "buttonClassify";
             this.buttonClassify.Size = new System.Drawing.Size(283, 23);
             this.buttonClassify.TabIndex = 2;
             this.buttonClassify.Text = "Classify";
             this.buttonClassify.UseVisualStyleBackColor = true;
             this.buttonClassify.Click += new System.EventHandler(this.buttonClassify_Click);
+            // 
+            // buttonBagOfWords
+            // 
+            this.buttonBagOfWords.Location = new System.Drawing.Point(7, 19);
+            this.buttonBagOfWords.Name = "buttonBagOfWords";
+            this.buttonBagOfWords.Size = new System.Drawing.Size(283, 23);
+            this.buttonBagOfWords.TabIndex = 8;
+            this.buttonBagOfWords.Text = "Process Images";
+            this.buttonBagOfWords.UseVisualStyleBackColor = true;
+            this.buttonBagOfWords.Click += new System.EventHandler(this.buttonBagOfWords_Click);
             // 
             // openFileDialog1
             // 
@@ -198,7 +215,7 @@
             // buttonOpen
             // 
             this.buttonOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonOpen.Location = new System.Drawing.Point(6, 239);
+            this.buttonOpen.Location = new System.Drawing.Point(6, 180);
             this.buttonOpen.Name = "buttonOpen";
             this.buttonOpen.Size = new System.Drawing.Size(75, 23);
             this.buttonOpen.TabIndex = 3;
@@ -210,7 +227,7 @@
             // 
             this.textBoxImageInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxImageInput.Location = new System.Drawing.Point(87, 241);
+            this.textBoxImageInput.Location = new System.Drawing.Point(87, 182);
             this.textBoxImageInput.Name = "textBoxImageInput";
             this.textBoxImageInput.Size = new System.Drawing.Size(533, 20);
             this.textBoxImageInput.TabIndex = 4;
@@ -225,7 +242,7 @@
             this.groupBoxImage.Controls.Add(this.textBoxImageInput);
             this.groupBoxImage.Location = new System.Drawing.Point(319, 244);
             this.groupBoxImage.Name = "groupBoxImage";
-            this.groupBoxImage.Size = new System.Drawing.Size(626, 267);
+            this.groupBoxImage.Size = new System.Drawing.Size(626, 208);
             this.groupBoxImage.TabIndex = 5;
             this.groupBoxImage.TabStop = false;
             this.groupBoxImage.Text = "Image";
@@ -237,7 +254,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxImage.Location = new System.Drawing.Point(6, 19);
             this.pictureBoxImage.Name = "pictureBoxImage";
-            this.pictureBoxImage.Size = new System.Drawing.Size(614, 214);
+            this.pictureBoxImage.Size = new System.Drawing.Size(614, 155);
             this.pictureBoxImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxImage.TabIndex = 5;
             this.pictureBoxImage.TabStop = false;
@@ -275,10 +292,10 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.HotTrack = true;
-            this.tabControl1.Location = new System.Drawing.Point(5, 5);
+            this.tabControl1.Location = new System.Drawing.Point(5, 64);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(959, 543);
+            this.tabControl1.Size = new System.Drawing.Size(959, 484);
             this.tabControl1.TabIndex = 8;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -290,7 +307,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(951, 517);
+            this.tabPage1.Size = new System.Drawing.Size(951, 458);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Classify";
             // 
@@ -303,23 +320,207 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(951, 517);
+            this.tabPage2.Size = new System.Drawing.Size(951, 458);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Test";
+            // 
+            // listView2
+            // 
+            this.listView2.Location = new System.Drawing.Point(590, 170);
+            this.listView2.Name = "listView2";
+            this.listView2.Size = new System.Drawing.Size(355, 282);
+            this.listView2.TabIndex = 5;
+            this.listView2.UseCompatibleStateImageBehavior = false;
             // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.numericUpDownRatQuadConst);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.numericUpDownGaussSigma);
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.numericUpDownPolyConst);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.numericUpDownPolyDegree);
+            this.groupBox2.Controls.Add(this.radioButtonPoly);
+            this.groupBox2.Controls.Add(this.radioButtonChi);
+            this.groupBox2.Controls.Add(this.radioButtonGauss);
+            this.groupBox2.Controls.Add(this.radioButtonRatQuad);
             this.groupBox2.Controls.Add(this.numericUpDown1);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.buttonRunTestSVM);
-            this.groupBox2.Location = new System.Drawing.Point(225, 6);
+            this.groupBox2.Location = new System.Drawing.Point(227, 9);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(213, 130);
+            this.groupBox2.Size = new System.Drawing.Size(272, 332);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "SVM Settings";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(27, 87);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(49, 13);
+            this.label7.TabIndex = 24;
+            this.label7.Text = "Constant";
+            // 
+            // numericUpDownRatQuadConst
+            // 
+            this.numericUpDownRatQuadConst.DecimalPlaces = 4;
+            this.numericUpDownRatQuadConst.Location = new System.Drawing.Point(85, 85);
+            this.numericUpDownRatQuadConst.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownRatQuadConst.Name = "numericUpDownRatQuadConst";
+            this.numericUpDownRatQuadConst.ReadOnly = true;
+            this.numericUpDownRatQuadConst.Size = new System.Drawing.Size(107, 20);
+            this.numericUpDownRatQuadConst.TabIndex = 23;
+            this.numericUpDownRatQuadConst.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownRatQuadConst.ValueChanged += new System.EventHandler(this.numericUpDownRatQuadConst_ValueChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(27, 144);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(36, 13);
+            this.label6.TabIndex = 22;
+            this.label6.Text = "Sigma";
+            // 
+            // numericUpDownGaussSigma
+            // 
+            this.numericUpDownGaussSigma.DecimalPlaces = 4;
+            this.numericUpDownGaussSigma.Location = new System.Drawing.Point(85, 142);
+            this.numericUpDownGaussSigma.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownGaussSigma.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownGaussSigma.Name = "numericUpDownGaussSigma";
+            this.numericUpDownGaussSigma.ReadOnly = true;
+            this.numericUpDownGaussSigma.Size = new System.Drawing.Size(107, 20);
+            this.numericUpDownGaussSigma.TabIndex = 21;
+            this.numericUpDownGaussSigma.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownGaussSigma.ValueChanged += new System.EventHandler(this.numericUpDownGaussSigma_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(27, 228);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(49, 13);
+            this.label5.TabIndex = 20;
+            this.label5.Text = "Constant";
+            // 
+            // numericUpDownPolyConst
+            // 
+            this.numericUpDownPolyConst.DecimalPlaces = 4;
+            this.numericUpDownPolyConst.Location = new System.Drawing.Point(85, 226);
+            this.numericUpDownPolyConst.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownPolyConst.Name = "numericUpDownPolyConst";
+            this.numericUpDownPolyConst.ReadOnly = true;
+            this.numericUpDownPolyConst.Size = new System.Drawing.Size(107, 20);
+            this.numericUpDownPolyConst.TabIndex = 19;
+            this.numericUpDownPolyConst.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownPolyConst.ValueChanged += new System.EventHandler(this.numericUpDownPolyConst_ValueChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(27, 202);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(42, 13);
+            this.label4.TabIndex = 18;
+            this.label4.Text = "Degree";
+            // 
+            // numericUpDownPolyDegree
+            // 
+            this.numericUpDownPolyDegree.Location = new System.Drawing.Point(85, 200);
+            this.numericUpDownPolyDegree.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownPolyDegree.Name = "numericUpDownPolyDegree";
+            this.numericUpDownPolyDegree.ReadOnly = true;
+            this.numericUpDownPolyDegree.Size = new System.Drawing.Size(107, 20);
+            this.numericUpDownPolyDegree.TabIndex = 17;
+            this.numericUpDownPolyDegree.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownPolyDegree.ValueChanged += new System.EventHandler(this.numericUpDownPolyDegree_ValueChanged);
+            // 
+            // radioButtonPoly
+            // 
+            this.radioButtonPoly.AutoSize = true;
+            this.radioButtonPoly.Location = new System.Drawing.Point(9, 175);
+            this.radioButtonPoly.Name = "radioButtonPoly";
+            this.radioButtonPoly.Size = new System.Drawing.Size(108, 17);
+            this.radioButtonPoly.TabIndex = 16;
+            this.radioButtonPoly.TabStop = true;
+            this.radioButtonPoly.Text = "Polynomial Kernel";
+            this.radioButtonPoly.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonChi
+            // 
+            this.radioButtonChi.AutoSize = true;
+            this.radioButtonChi.Location = new System.Drawing.Point(9, 263);
+            this.radioButtonChi.Name = "radioButtonChi";
+            this.radioButtonChi.Size = new System.Drawing.Size(116, 17);
+            this.radioButtonChi.TabIndex = 15;
+            this.radioButtonChi.TabStop = true;
+            this.radioButtonChi.Text = "Chi Squared Kernel";
+            this.radioButtonChi.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonGauss
+            // 
+            this.radioButtonGauss.AutoSize = true;
+            this.radioButtonGauss.Location = new System.Drawing.Point(9, 119);
+            this.radioButtonGauss.Name = "radioButtonGauss";
+            this.radioButtonGauss.Size = new System.Drawing.Size(102, 17);
+            this.radioButtonGauss.TabIndex = 14;
+            this.radioButtonGauss.TabStop = true;
+            this.radioButtonGauss.Text = "Gaussian Kernel";
+            this.radioButtonGauss.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonRatQuad
+            // 
+            this.radioButtonRatQuad.AutoSize = true;
+            this.radioButtonRatQuad.Location = new System.Drawing.Point(9, 62);
+            this.radioButtonRatQuad.Name = "radioButtonRatQuad";
+            this.radioButtonRatQuad.Size = new System.Drawing.Size(146, 17);
+            this.radioButtonRatQuad.TabIndex = 13;
+            this.radioButtonRatQuad.TabStop = true;
+            this.radioButtonRatQuad.Text = "Rational Quadratic Kernel";
+            this.radioButtonRatQuad.UseVisualStyleBackColor = true;
             // 
             // numericUpDown1
             // 
@@ -358,9 +559,9 @@
             this.buttonRunTestSVM.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRunTestSVM.BackColor = System.Drawing.Color.LightGreen;
-            this.buttonRunTestSVM.Location = new System.Drawing.Point(6, 94);
+            this.buttonRunTestSVM.Location = new System.Drawing.Point(6, 296);
             this.buttonRunTestSVM.Name = "buttonRunTestSVM";
-            this.buttonRunTestSVM.Size = new System.Drawing.Size(201, 30);
+            this.buttonRunTestSVM.Size = new System.Drawing.Size(260, 30);
             this.buttonRunTestSVM.TabIndex = 3;
             this.buttonRunTestSVM.Text = "Run test";
             this.buttonRunTestSVM.UseVisualStyleBackColor = false;
@@ -375,7 +576,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.numericUpDownTesterKValueTester);
             this.groupBox1.Controls.Add(this.buttonRunTestKNN);
-            this.groupBox1.Location = new System.Drawing.Point(6, 6);
+            this.groupBox1.Location = new System.Drawing.Point(8, 9);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(213, 130);
             this.groupBox1.TabIndex = 3;
@@ -463,11 +664,11 @@
             // 
             // textBoxTestResults
             // 
-            this.textBoxTestResults.Location = new System.Drawing.Point(444, 6);
+            this.textBoxTestResults.Location = new System.Drawing.Point(590, 9);
             this.textBoxTestResults.Multiline = true;
             this.textBoxTestResults.Name = "textBoxTestResults";
             this.textBoxTestResults.ReadOnly = true;
-            this.textBoxTestResults.Size = new System.Drawing.Size(499, 505);
+            this.textBoxTestResults.Size = new System.Drawing.Size(353, 130);
             this.textBoxTestResults.TabIndex = 1;
             // 
             // tabPage3
@@ -478,7 +679,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(951, 517);
+            this.tabPage3.Size = new System.Drawing.Size(951, 458);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Edit";
             // 
@@ -517,7 +718,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Location = new System.Drawing.Point(522, 6);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(421, 234);
+            this.pictureBox1.Size = new System.Drawing.Size(421, 175);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
@@ -529,7 +730,7 @@
             this.listView1.LargeImageList = this.imageList1;
             this.listView1.Location = new System.Drawing.Point(6, 6);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(510, 505);
+            this.listView1.Size = new System.Drawing.Size(510, 446);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
@@ -540,19 +741,22 @@
             this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // listView2
+            // groupBox3
             // 
-            this.listView2.Location = new System.Drawing.Point(6, 142);
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(432, 369);
-            this.listView2.TabIndex = 5;
-            this.listView2.UseCompatibleStateImageBehavior = false;
+            this.groupBox3.Controls.Add(this.buttonBagOfWords);
+            this.groupBox3.Location = new System.Drawing.Point(5, 8);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(955, 50);
+            this.groupBox3.TabIndex = 9;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Common Controls";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(964, 552);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.tabControl1);
             this.MinimumSize = new System.Drawing.Size(859, 524);
             this.Name = "Form1";
@@ -571,6 +775,10 @@
             this.tabPage2.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRatQuadConst)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGaussSigma)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPolyConst)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPolyDegree)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -581,6 +789,7 @@
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -624,6 +833,19 @@
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.RadioButton radioButtonPoly;
+        private System.Windows.Forms.RadioButton radioButtonChi;
+        private System.Windows.Forms.RadioButton radioButtonGauss;
+        private System.Windows.Forms.RadioButton radioButtonRatQuad;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown numericUpDownGaussSigma;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown numericUpDownPolyConst;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numericUpDownPolyDegree;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown numericUpDownRatQuadConst;
     }
 }
 
