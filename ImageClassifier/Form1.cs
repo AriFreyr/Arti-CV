@@ -15,7 +15,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ImageClassifier.ImageProcessors;
 using Image = System.Drawing.Image;
-using ImageClassifier.Models;
+using Accord.MachineLearning;
+using Accord.Math;
 
 namespace ImageClassifier
 {
@@ -27,18 +28,17 @@ namespace ImageClassifier
         private int[] outputs;
         private ImageProcessor imageProcessor;
         private Image img;
-        private int k = 1;
+        private int testK = 1;
+        private int classK = 1;
         private ImageContext db = new ImageContext();
         private List<Bitmap> imageData;
-        private Boolean databaseChanged = false;
-        private List<Image> selectedImages;
-        private List<ImageData> imagesToBeDeleted;
+        private int KNNCVFolds = 10;
+        private int SVMCVFolds = 10;
 
         public Form1()
         {
             InitializeComponent();
             imageData = convertImagesFromDatabaseToBitmapType(db);
-            //ProcessImages(out inputs, out outputs);
         }
 
         #region Utility functions
@@ -52,27 +52,27 @@ namespace ImageClassifier
             var sw = Stopwatch.StartNew();
             var numImages = imageProcessor.ProcessImages(data, out argInputs, out argOutputs);
             sw.Stop();
+            Console.WriteLine();
             //LoadingForm.ActiveForm.Close();
         }
 
-        private void getAllImagesFromDatabaseToListView()
+        private void getAllImagesFromDatabaseToListView(ListView listview)
         {
-            listView1.Clear();
             imageList1.ImageSize = new Size(64, 64);
-            listView1.View = View.LargeIcon;
+            listview.View = View.LargeIcon;
 
             foreach (var image in imageData)
             {
                 imageList1.Images.Add(image);
             }
 
-            listView1.LargeImageList = imageList1;
+            listview.LargeImageList = imageList1;
 
             for (int i = 0; i < imageList1.Images.Count; i++)
             {
                 ListViewItem item = new ListViewItem();
                 item.ImageIndex = i;
-                this.listView1.Items.Add(item);
+                listview.Items.Add(item);
             }
 
         }
@@ -100,6 +100,87 @@ namespace ImageClassifier
         }
         #endregion
 
+        #region Testing Functions
+        public void TestKNN(double[][] inputs, int[] outputs, int kValue)
+        {
+            var crossValidation = new CrossValidation(inputs.Length, KNNCVFolds);
+            crossValidation.Fitting = delegate(int k, int[] indicesTrain, int[] indicesValidation)
+            {
+                var trainingInputs = inputs.Submatrix(indicesTrain);
+                var trainingOutputs = outputs.Submatrix(indicesTrain);
+
+                // And now the validation data:
+                var validationInputs = inputs.Submatrix(indicesValidation);
+                var validationOutputs = outputs.Submatrix(indicesValidation);
+
+                var sw = Stopwatch.StartNew();
+                var knn = new KNN();
+                knn.TrainKNN(trainingInputs, trainingOutputs, kValue);
+                sw.Stop();
+
+                addToTestResultBox("Training for: " + sw.ElapsedMilliseconds + "ms");
+
+                var error = knn.ComputeError(validationInputs, validationOutputs);
+
+                return new CrossValidationValues(knn, 0, error);
+
+            };
+
+            // Compute the cross-validation
+            var result = crossValidation.Compute();
+
+            // Finally, access the measured performance.
+            var trainingErrors = result.Training.Mean;
+            var validationErrors = result.Validation.Mean;
+
+            textBoxTestResults.AppendText("Finished with " + trainingErrors + " training errors and " + validationErrors + " validation errors" + Environment.NewLine);
+        }
+
+        public void TestSVM(double[][] inputs, int[] outputs)
+        {
+
+            var crossValidation = new CrossValidation(inputs.Length, SVMCVFolds);
+            crossValidation.Fitting = delegate(int k, int[] indicesTrain, int[] indicesValidation)
+            {
+
+                var trainingInputs = inputs.Submatrix(indicesTrain);
+                var trainingOutputs = outputs.Submatrix(indicesTrain);
+
+                // And now the validation data:
+                var validationInputs = inputs.Submatrix(indicesValidation);
+                var validationOutputs = outputs.Submatrix(indicesValidation);
+
+                var sw1 = Stopwatch.StartNew();
+                var svm = new SVM();
+                var trainingError = svm.TrainSVM(new RationalQuadratic(1), 3, trainingInputs, trainingOutputs);
+                sw1.Stop();
+
+                //textBoxTestResults.AppendText("Training for: " + sw1.ElapsedMilliseconds + "ms with errors: " + trainingError + Environment.NewLine);
+
+                var validationError = svm.GetSMO().ComputeError(validationInputs, validationOutputs);
+
+                // Return a new information structure containing the model and the errors achieved.
+                return new CrossValidationValues(svm, trainingError, validationError);
+
+            };
+
+            // Compute the cross-validation
+            var result = crossValidation.Compute();
+
+            // Finally, access the measured performance.
+            var trainingErrors = result.Training.Mean;
+            var validationErrors = result.Validation.Mean;
+
+            addToTestResultBox("Finished with " + trainingErrors + " training errors and " + validationErrors + " validation errors");
+        }
+
+        private void addToTestResultBox(string result)
+        {
+            textBoxTestResults.AppendText(result + Environment.NewLine);
+        }
+
+        #endregion
+
         #region UI element function
         private void comboBoxAlgPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -121,7 +202,7 @@ namespace ImageClassifier
         {
             if (selectedAlgorithm.Equals(Algorithms.KNN))
             {
-                textBoxResults.AppendText("Starting classification with kNN where k is " + k + Environment.NewLine);
+                textBoxResults.AppendText("Starting classification with kNN where k is " + classK + Environment.NewLine);
                 if (img == null)
                 {
                     textBoxResults.AppendText("ERROR: Please choose an image first" + Environment.NewLine);
@@ -131,7 +212,7 @@ namespace ImageClassifier
                     var knn = new KNN();
                     string result;
                     textBoxResults.AppendText("Running training function..." + Environment.NewLine);
-                    knn.TrainKNN(inputs, outputs, k);
+                    knn.TrainKNN(inputs, outputs, classK);
                     result = knn.Classify(imageProcessor.ProcessImages(img));
                     textBoxResults.AppendText("Result: " + result + Environment.NewLine);
                 }
@@ -183,13 +264,17 @@ namespace ImageClassifier
 
         private void numericUpDownKValue_ValueChanged(object sender, EventArgs e)
         {
-            k = (int)numericUpDownKValue.Value;
+            classK = (int)numericUpDownKValue.Value;
         }
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl1.SelectedIndex.Equals(2))
             {
-                getAllImagesFromDatabaseToListView();
+                getAllImagesFromDatabaseToListView(listView1);
+            }
+            if (tabControl1.SelectedIndex.Equals(1))
+            {
+                getAllImagesFromDatabaseToListView(listView2);
             }
         }
 
@@ -198,56 +283,40 @@ namespace ImageClassifier
             var selectedIndexes = listView1.SelectedIndices;
             if (selectedIndexes.Count != 0)
             {
-                selectedImages = new List<Image>();
+                List<Image> images = new List<Image>();
                 foreach (var item in selectedIndexes)
                 {
-                    selectedImages.Add(imageList1.Images[(int)item]);
+                    images.Add(imageList1.Images[(int)item]);
                 }
-                pictureBox1.Image = selectedImages[0];
-                totalNumberOfSelectedImages.Text = selectedIndexes.Count.ToString();
-                selectedImageIndex.Text = "1";
+                pictureBox1.Image = images[0];
             }
+        }
+
+        private void buttonRunTestKNN_Click(object sender, EventArgs e)
+        {
+            TestKNN(inputs, outputs, testK);
         }
 
         #endregion
 
-        private void lastImageButton_Click(object sender, EventArgs e)
+        private void buttonBagOfWords_Click(object sender, EventArgs e)
         {
-            int index = Int32.Parse(selectedImageIndex.Text);
-
-            if (!index.Equals(1))
-            {
-                pictureBox1.Image = selectedImages[--index - 1];
-                selectedImageIndex.Text = index.ToString();
-            }
+            ProcessImages(out inputs, out outputs);
         }
 
-        private void nextImageButton_Click(object sender, EventArgs e)
+        private void buttonRunTestSVM_Click(object sender, EventArgs e)
         {
-            int index = Int32.Parse(selectedImageIndex.Text);
-            int indexEnd = listView1.SelectedIndices.Count;
-
-            if (!index.Equals(indexEnd))
-            {
-                pictureBox1.Image = selectedImages[++index - 1];
-                selectedImageIndex.Text = index.ToString();
-            }
+            TestSVM(inputs, outputs);
         }
 
-        private void deleteImageButton_Click(object sender, EventArgs e)
+        private void numericUpDownTesterKValueTester_ValueChanged(object sender, EventArgs e)
         {
-            var selectedIndices = listView1.SelectedIndices;
+            testK = (int)numericUpDownKValue.Value;
+        }
 
-            foreach (var item in selectedIndices)
-            {
-                var image = from img in db.Image
-                            where img.ID == (int)item
-                            select img;
-                foreach (var im in image)
-                {
-                    imagesToBeDeleted.Add(im);
-                }
-            }
+        private void numericUpDownCVFoldsKNN_ValueChanged(object sender, EventArgs e)
+        {
+            KNNCVFolds = (int)numericUpDownCVFoldsKNN.Value;
         }
     }
 }

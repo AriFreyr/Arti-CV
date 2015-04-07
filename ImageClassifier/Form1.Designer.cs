@@ -33,6 +33,7 @@
             this.comboBoxAlgPicker = new System.Windows.Forms.ComboBox();
             this.labelClassifyingAlg = new System.Windows.Forms.Label();
             this.groupBoxClassifier = new System.Windows.Forms.GroupBox();
+            this.buttonBagOfWords = new System.Windows.Forms.Button();
             this.numericUpDownKValue = new System.Windows.Forms.NumericUpDown();
             this.buttonTrain = new System.Windows.Forms.Button();
             this.labelKValue = new System.Windows.Forms.Label();
@@ -47,20 +48,25 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.buttonRunTestSVM = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownCVFoldsKNN = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericUpDownTesterKValueTester = new System.Windows.Forms.NumericUpDown();
+            this.buttonRunTestKNN = new System.Windows.Forms.Button();
+            this.textBoxTestResults = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.nextImageButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.lastImageButton = new System.Windows.Forms.ToolStripButton();
-            this.nextImageButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.deleteImageButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.saveChangesButton = new System.Windows.Forms.ToolStripButton();
-            this.totalNumberOfSelectedImages = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripLabel();
-            this.selectedImageIndex = new System.Windows.Forms.ToolStripTextBox();
+            this.listView2 = new System.Windows.Forms.ListView();
             this.groupBoxClassifier.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownKValue)).BeginInit();
             this.groupBoxImage.SuspendLayout();
@@ -68,9 +74,15 @@
             this.groupBoxResult.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCVFoldsKNN)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTesterKValueTester)).BeginInit();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBoxAlgPicker
@@ -100,6 +112,7 @@
             // 
             this.groupBoxClassifier.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxClassifier.Controls.Add(this.buttonBagOfWords);
             this.groupBoxClassifier.Controls.Add(this.numericUpDownKValue);
             this.groupBoxClassifier.Controls.Add(this.buttonTrain);
             this.groupBoxClassifier.Controls.Add(this.labelKValue);
@@ -112,6 +125,16 @@
             this.groupBoxClassifier.TabIndex = 2;
             this.groupBoxClassifier.TabStop = false;
             this.groupBoxClassifier.Text = "Classifier";
+            // 
+            // buttonBagOfWords
+            // 
+            this.buttonBagOfWords.Location = new System.Drawing.Point(9, 418);
+            this.buttonBagOfWords.Name = "buttonBagOfWords";
+            this.buttonBagOfWords.Size = new System.Drawing.Size(283, 23);
+            this.buttonBagOfWords.TabIndex = 8;
+            this.buttonBagOfWords.Text = "Compute Bag of Words";
+            this.buttonBagOfWords.UseVisualStyleBackColor = true;
+            this.buttonBagOfWords.Click += new System.EventHandler(this.buttonBagOfWords_Click);
             // 
             // numericUpDownKValue
             // 
@@ -137,7 +160,7 @@
             // 
             this.buttonTrain.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.buttonTrain.Enabled = false;
-            this.buttonTrain.Location = new System.Drawing.Point(9, 448);
+            this.buttonTrain.Location = new System.Drawing.Point(9, 447);
             this.buttonTrain.Name = "buttonTrain";
             this.buttonTrain.Size = new System.Drawing.Size(283, 23);
             this.buttonTrain.TabIndex = 5;
@@ -273,12 +296,179 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.listView2);
+            this.tabPage2.Controls.Add(this.groupBox2);
+            this.tabPage2.Controls.Add(this.groupBox1);
+            this.tabPage2.Controls.Add(this.textBoxTestResults);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(951, 517);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Test";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.numericUpDown1);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.buttonRunTestSVM);
+            this.groupBox2.Location = new System.Drawing.Point(225, 6);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(213, 130);
+            this.groupBox2.TabIndex = 4;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "SVM Settings";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(96, 32);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.ReadOnly = true;
+            this.numericUpDown1.Size = new System.Drawing.Size(107, 20);
+            this.numericUpDown1.TabIndex = 8;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 34);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(84, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Number of folds:";
+            // 
+            // buttonRunTestSVM
+            // 
+            this.buttonRunTestSVM.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRunTestSVM.BackColor = System.Drawing.Color.LightGreen;
+            this.buttonRunTestSVM.Location = new System.Drawing.Point(6, 94);
+            this.buttonRunTestSVM.Name = "buttonRunTestSVM";
+            this.buttonRunTestSVM.Size = new System.Drawing.Size(201, 30);
+            this.buttonRunTestSVM.TabIndex = 3;
+            this.buttonRunTestSVM.Text = "Run test";
+            this.buttonRunTestSVM.UseVisualStyleBackColor = false;
+            this.buttonRunTestSVM.Click += new System.EventHandler(this.buttonRunTestSVM_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.numericUpDownCVFoldsKNN);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.numericUpDownTesterKValueTester);
+            this.groupBox1.Controls.Add(this.buttonRunTestKNN);
+            this.groupBox1.Location = new System.Drawing.Point(6, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(213, 130);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "kNN Settings";
+            // 
+            // numericUpDownCVFoldsKNN
+            // 
+            this.numericUpDownCVFoldsKNN.Location = new System.Drawing.Point(96, 59);
+            this.numericUpDownCVFoldsKNN.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.numericUpDownCVFoldsKNN.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownCVFoldsKNN.Name = "numericUpDownCVFoldsKNN";
+            this.numericUpDownCVFoldsKNN.ReadOnly = true;
+            this.numericUpDownCVFoldsKNN.Size = new System.Drawing.Size(107, 20);
+            this.numericUpDownCVFoldsKNN.TabIndex = 6;
+            this.numericUpDownCVFoldsKNN.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownCVFoldsKNN.ValueChanged += new System.EventHandler(this.numericUpDownCVFoldsKNN_ValueChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 61);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(84, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Number of folds:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(44, 29);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "K value:";
+            // 
+            // numericUpDownTesterKValueTester
+            // 
+            this.numericUpDownTesterKValueTester.Location = new System.Drawing.Point(96, 27);
+            this.numericUpDownTesterKValueTester.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.numericUpDownTesterKValueTester.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownTesterKValueTester.Name = "numericUpDownTesterKValueTester";
+            this.numericUpDownTesterKValueTester.ReadOnly = true;
+            this.numericUpDownTesterKValueTester.Size = new System.Drawing.Size(107, 20);
+            this.numericUpDownTesterKValueTester.TabIndex = 3;
+            this.numericUpDownTesterKValueTester.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownTesterKValueTester.ValueChanged += new System.EventHandler(this.numericUpDownTesterKValueTester_ValueChanged);
+            // 
+            // buttonRunTestKNN
+            // 
+            this.buttonRunTestKNN.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRunTestKNN.BackColor = System.Drawing.Color.LightGreen;
+            this.buttonRunTestKNN.Location = new System.Drawing.Point(6, 94);
+            this.buttonRunTestKNN.Name = "buttonRunTestKNN";
+            this.buttonRunTestKNN.Size = new System.Drawing.Size(201, 30);
+            this.buttonRunTestKNN.TabIndex = 2;
+            this.buttonRunTestKNN.Text = "Run test";
+            this.buttonRunTestKNN.UseVisualStyleBackColor = false;
+            this.buttonRunTestKNN.Click += new System.EventHandler(this.buttonRunTestKNN_Click);
+            // 
+            // textBoxTestResults
+            // 
+            this.textBoxTestResults.Location = new System.Drawing.Point(444, 6);
+            this.textBoxTestResults.Multiline = true;
+            this.textBoxTestResults.Name = "textBoxTestResults";
+            this.textBoxTestResults.ReadOnly = true;
+            this.textBoxTestResults.Size = new System.Drawing.Size(499, 505);
+            this.textBoxTestResults.TabIndex = 1;
             // 
             // tabPage3
             // 
@@ -291,6 +481,46 @@
             this.tabPage3.Size = new System.Drawing.Size(951, 517);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Edit";
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nextImageButton,
+            this.toolStripButton2});
+            this.toolStrip1.Location = new System.Drawing.Point(522, 243);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(58, 25);
+            this.toolStrip1.TabIndex = 2;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // nextImageButton
+            // 
+            this.nextImageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.nextImageButton.Image = ((System.Drawing.Image)(resources.GetObject("nextImageButton.Image")));
+            this.nextImageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.nextImageButton.Name = "nextImageButton";
+            this.nextImageButton.Size = new System.Drawing.Size(23, 22);
+            this.nextImageButton.Text = "toolStripButton1";
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton2.Text = "toolStripButton2";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.Location = new System.Drawing.Point(522, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(421, 234);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
             // 
             // listView1
             // 
@@ -310,103 +540,13 @@
             this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // pictureBox1
+            // listView2
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Location = new System.Drawing.Point(522, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(421, 234);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.selectedImageIndex,
-            this.toolStripSeparator3,
-            this.totalNumberOfSelectedImages,
-            this.lastImageButton,
-            this.nextImageButton,
-            this.toolStripSeparator1,
-            this.deleteImageButton,
-            this.toolStripSeparator2,
-            this.saveChangesButton});
-            this.toolStrip1.Location = new System.Drawing.Point(522, 243);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(210, 25);
-            this.toolStrip1.TabIndex = 2;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // lastImageButton
-            // 
-            this.lastImageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.lastImageButton.Image = ((System.Drawing.Image)(resources.GetObject("lastImageButton.Image")));
-            this.lastImageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.lastImageButton.Name = "lastImageButton";
-            this.lastImageButton.Size = new System.Drawing.Size(23, 22);
-            this.lastImageButton.Text = "toolStripButton1";
-            this.lastImageButton.Click += new System.EventHandler(this.lastImageButton_Click);
-            // 
-            // nextImageButton
-            // 
-            this.nextImageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.nextImageButton.Image = ((System.Drawing.Image)(resources.GetObject("nextImageButton.Image")));
-            this.nextImageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.nextImageButton.Name = "nextImageButton";
-            this.nextImageButton.Size = new System.Drawing.Size(23, 22);
-            this.nextImageButton.Text = "toolStripButton2";
-            this.nextImageButton.Click += new System.EventHandler(this.nextImageButton_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // deleteImageButton
-            // 
-            this.deleteImageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.deleteImageButton.Image = ((System.Drawing.Image)(resources.GetObject("deleteImageButton.Image")));
-            this.deleteImageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.deleteImageButton.Name = "deleteImageButton";
-            this.deleteImageButton.Size = new System.Drawing.Size(23, 22);
-            this.deleteImageButton.Text = "toolStripButton1";
-            this.deleteImageButton.Click += new System.EventHandler(this.deleteImageButton_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // saveChangesButton
-            // 
-            this.saveChangesButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.saveChangesButton.Image = ((System.Drawing.Image)(resources.GetObject("saveChangesButton.Image")));
-            this.saveChangesButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.saveChangesButton.Name = "saveChangesButton";
-            this.saveChangesButton.Size = new System.Drawing.Size(23, 22);
-            this.saveChangesButton.Text = "toolStripButton1";
-            // 
-            // totalNumberOfSelectedImages
-            // 
-            this.totalNumberOfSelectedImages.Name = "totalNumberOfSelectedImages";
-            this.totalNumberOfSelectedImages.Size = new System.Drawing.Size(25, 25);
-            this.totalNumberOfSelectedImages.Text = "0";
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(18, 22);
-            this.toolStripSeparator3.Text = "of";
-            // 
-            // selectedImageIndex
-            // 
-            this.selectedImageIndex.Name = "selectedImageIndex";
-            this.selectedImageIndex.Size = new System.Drawing.Size(25, 25);
-            this.selectedImageIndex.Text = "0";
+            this.listView2.Location = new System.Drawing.Point(6, 142);
+            this.listView2.Name = "listView2";
+            this.listView2.Size = new System.Drawing.Size(432, 369);
+            this.listView2.TabIndex = 5;
+            this.listView2.UseCompatibleStateImageBehavior = false;
             // 
             // Form1
             // 
@@ -427,11 +567,20 @@
             this.groupBoxResult.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCVFoldsKNN)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTesterKValueTester)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -460,15 +609,21 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton lastImageButton;
         private System.Windows.Forms.ToolStripButton nextImageButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton deleteImageButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripButton saveChangesButton;
-        private System.Windows.Forms.ToolStripLabel toolStripSeparator3;
-        private System.Windows.Forms.ToolStripTextBox totalNumberOfSelectedImages;
-        private System.Windows.Forms.ToolStripTextBox selectedImageIndex;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.TextBox textBoxTestResults;
+        private System.Windows.Forms.Button buttonBagOfWords;
+        private System.Windows.Forms.Button buttonRunTestKNN;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button buttonRunTestSVM;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numericUpDownTesterKValueTester;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown numericUpDownCVFoldsKNN;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListView listView2;
     }
 }
 
