@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ImageClassifier.ImageProcessors;
 using Image = System.Drawing.Image;
+using ImageClassifier.Models;
 
 namespace ImageClassifier
 {
@@ -27,18 +28,24 @@ namespace ImageClassifier
         private ImageProcessor imageProcessor;
         private Image img;
         private int k = 1;
-
+        private ImageContext db = new ImageContext();
+        private List<Bitmap> imageData;
+        private Boolean databaseChanged = false;
+        private List<Image> selectedImages;
+        private List<ImageData> imagesToBeDeleted;
 
         public Form1()
         {
             InitializeComponent();
-            ProcessImages(out inputs, out outputs);
+            imageData = convertImagesFromDatabaseToBitmapType(db);
+            //ProcessImages(out inputs, out outputs);
         }
 
+        #region Utility functions
         private void ProcessImages(out double[][] argInputs, out int[] argOutputs)
         {
             var imageTypes = new[] { "car", "laptop", "bicycle" };
-            var db = new ImageContext();
+            db = new ImageContext();
             var data = db.Image.ToList();
             data.Shuffle();
             imageProcessor = new CornerProcessor(new FastCornersDetector());
@@ -48,13 +55,59 @@ namespace ImageClassifier
             //LoadingForm.ActiveForm.Close();
         }
 
+        private void getAllImagesFromDatabaseToListView()
+        {
+            listView1.Clear();
+            imageList1.ImageSize = new Size(64, 64);
+            listView1.View = View.LargeIcon;
+
+            foreach (var image in imageData)
+            {
+                imageList1.Images.Add(image);
+            }
+
+            listView1.LargeImageList = imageList1;
+
+            for (int i = 0; i < imageList1.Images.Count; i++)
+            {
+                ListViewItem item = new ListViewItem();
+                item.ImageIndex = i;
+                this.listView1.Items.Add(item);
+            }
+
+        }
+
+        /// <summary>
+        /// Converts all bit array images from the database to Bitmap type
+        /// </summary>
+        /// <param name="db">The database image context</param>
+        /// <returns>The list of all the converted images</returns>
+        private List<Bitmap> convertImagesFromDatabaseToBitmapType(ImageContext db)
+        {
+            var images = db.Image.ToList();
+            var imageData = new List<Bitmap>();
+
+
+            foreach (var image in images)
+            {
+                using (var stream = new MemoryStream(image.Image))
+                {
+                    imageData.Add(new Bitmap(stream));
+                }
+            }
+
+            return imageData;
+        }
+        #endregion
+
+        #region UI element function
         private void comboBoxAlgPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxAlgPicker.SelectedIndex == 0)
             {
                 selectedAlgorithm = Algorithms.KNN;
                 buttonClassify.Enabled = true;
-                numericUpDownKValue.Enabled = true;               
+                numericUpDownKValue.Enabled = true;
             }
             else if (comboBoxAlgPicker.SelectedIndex == 1)
             {
@@ -131,6 +184,70 @@ namespace ImageClassifier
         private void numericUpDownKValue_ValueChanged(object sender, EventArgs e)
         {
             k = (int)numericUpDownKValue.Value;
+        }
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedIndex.Equals(2))
+            {
+                getAllImagesFromDatabaseToListView();
+            }
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedIndexes = listView1.SelectedIndices;
+            if (selectedIndexes.Count != 0)
+            {
+                selectedImages = new List<Image>();
+                foreach (var item in selectedIndexes)
+                {
+                    selectedImages.Add(imageList1.Images[(int)item]);
+                }
+                pictureBox1.Image = selectedImages[0];
+                totalNumberOfSelectedImages.Text = selectedIndexes.Count.ToString();
+                selectedImageIndex.Text = "1";
+            }
+        }
+
+        #endregion
+
+        private void lastImageButton_Click(object sender, EventArgs e)
+        {
+            int index = Int32.Parse(selectedImageIndex.Text);
+
+            if (!index.Equals(1))
+            {
+                pictureBox1.Image = selectedImages[--index - 1];
+                selectedImageIndex.Text = index.ToString();
+            }
+        }
+
+        private void nextImageButton_Click(object sender, EventArgs e)
+        {
+            int index = Int32.Parse(selectedImageIndex.Text);
+            int indexEnd = listView1.SelectedIndices.Count;
+
+            if (!index.Equals(indexEnd))
+            {
+                pictureBox1.Image = selectedImages[++index - 1];
+                selectedImageIndex.Text = index.ToString();
+            }
+        }
+
+        private void deleteImageButton_Click(object sender, EventArgs e)
+        {
+            var selectedIndices = listView1.SelectedIndices;
+
+            foreach (var item in selectedIndices)
+            {
+                var image = from img in db.Image
+                            where img.ID == (int)item
+                            select img;
+                foreach (var im in image)
+                {
+                    imagesToBeDeleted.Add(im);
+                }
+            }
         }
     }
 }
